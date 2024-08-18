@@ -1,35 +1,48 @@
 import React, { useContext, useEffect } from "react";
-import SocketContext from "./Context";
+import SocketContext from "../Context/SocketContext";
+import APIContext from "../Context/APIContext";
+import MessageBox from "./MessageBox";
 
 export default function SocketIoFile() {
-  const { socket, SocketConnect } = useContext(SocketContext);
-  const getapi = async () => {
-    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/test`, {
-      method: "GET",
-    });
-    console.log(response);
-  };
+  const { socket, sendMessage, message, SocketConnect, socketDisConnect } =
+    useContext(SocketContext);
 
-  const sendMessage = () => (
-    console.log("message"),
-    socket?.emit("message", "Hi iam message"),
-    socket?.on("response", (data) => {
-      console.log("res", data);
-    })
-  );
+  const { clients, fetchActiveClients } = useContext(APIContext);
 
   useEffect(() => {
-    getapi();
     if (!socket?.connected) {
       SocketConnect();
     }
-    return socket?.disconnect;
+
+    return socketDisConnect;
   }, []);
 
   return (
     <div>
-      SocketIoFile
-      <button onClick={sendMessage}>Message</button>
+      SocketIoFile<br></br>
+      <button onClick={fetchActiveClients}>Refresh</button>
+      <table>
+        <thead>
+          <th>Sr no.</th>
+          <th>Client List</th>
+        </thead>
+        <tbody>
+          {clients?.map((item, index) => {
+            return (
+              <tr>
+                <td>{index + 1}</td>
+                <td>{item}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <MessageBox />
+      {message?.map((msg, index) => (
+        <h6>
+          {msg.client}-{msg.data}
+        </h6>
+      ))}
     </div>
   );
 }

@@ -1,15 +1,23 @@
 import "./App.css";
-import { SocketState } from "./Components/Context";
-// import ReactSocket from "./Components/ReactSocket";
+import ReactSocket from "./Components/ReactSocket";
 import SocketIoFile from "./Components/SocketIoFile";
+import { APIState } from "./Context/APIContext";
+import { SocketState } from "./Context/SocketContext";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      {/* <ReactSocket /> */}
-      <SocketState>
-        <SocketIoFile />
-      </SocketState>
+      <BrowserRouter>
+        <APIState>
+          <SocketState>
+            <Routes>
+              <Route path="/" element={<SocketIoFile />} />
+              <Route path="/web-socket" element={<ReactSocket />} />
+            </Routes>
+          </SocketState>
+        </APIState>
+      </BrowserRouter>
     </div>
   );
 }
