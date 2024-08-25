@@ -40,7 +40,7 @@ export default function SocketIoFile() {
       <MessageBox />
       {message?.map((msg, index) => (
         <h6>
-          {msg.client}-{msg.data}
+          {msg.client} {msg.data}
         </h6>
       ))}
     </div>
